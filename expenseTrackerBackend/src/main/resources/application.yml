@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: expenseTrackerBackend
+  data:
+    mongodb:
+      uri: mongodb+srv://harsha:WBAj99YUJ0PdoacT@harsha.xastq.mongodb.net/?retryWrites=true&w=majority&appName=Harsha  
+      database: expenseTracker
+      auto-index-creation: true
+
+logging:
+  level:
+    root: INFO
