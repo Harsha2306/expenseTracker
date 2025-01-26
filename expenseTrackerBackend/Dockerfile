@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Build the Spring Boot application
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Use a lightweight JDK for running the app
 FROM openjdk:17-jdk-slim
