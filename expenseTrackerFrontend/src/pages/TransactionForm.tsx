@@ -3,7 +3,7 @@ import { ICategory } from "../types";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import useIsAuthorized from "../hooks/useIsAuthorized";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Button from "../components/Button";
@@ -11,17 +11,29 @@ import Input from "../components/Input";
 import useToastContext from "../hooks/useToastContext";
 import Logout from "../components/Logout";
 
+function isAxiosError(error: unknown): error is AxiosError {
+  return (error as AxiosError)?.response !== undefined;
+}
+
+interface ErrorResponse {
+  errors: Record<string, string>;
+}
+
 const API = import.meta.env.VITE_USER_API_URL || "http://localhost:8080/user";
 
 interface ITransaction {
   amount: number;
   category: { id: string };
   note: string;
-  date: string;
+  date: string | null;
   type: "income" | "expense";
 }
 
-function convertToISOWithOffset(date: Date) {
+function convertToISOWithOffset(date: Date | null) {
+  if (!date) {
+    return null;
+  }
+
   const offset = -date.getTimezoneOffset();
   const offsetHours = Math.floor(Math.abs(offset) / 60);
   const offsetMinutes = Math.abs(offset) % 60;
@@ -64,9 +76,8 @@ function convertFromISOWithOffset(isoString: string): Date {
   return localDate;
 }
 
-//TODO apply errors
 const TransactionForm: React.FC = () => {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState<Date | null>(new Date());
   const [transaction, setTransaction] = useState<ITransaction>({
     amount: 0,
     date: convertToISOWithOffset(date),
@@ -106,11 +117,14 @@ const TransactionForm: React.FC = () => {
       });
       setDate(convertFromISOWithOffset(date));
     } catch (error) {
-      if (error.status === 401) {
+      if ((error as AxiosError).response?.status === 401) {
         navigateTo("/login");
       }
-      if (error.response.data.statusCode === 400) {
-        alert(error.response.data.errors[""]);
+      if (isAxiosError(error) && error.response?.status === 400) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        const errors = axiosError.response?.data.errors;
+        const errorMessage = errors?.[""] || "An unknown error occurred";
+        alert(errorMessage);
         navigateTo("/");
       }
     }
@@ -135,7 +149,7 @@ const TransactionForm: React.FC = () => {
         return categories;
       });
     } catch (error) {
-      if (error.status === 401) {
+      if (isAxiosError(error) && error.response?.status === 400) {
         navigateTo("/login");
       }
       console.log(error);
@@ -182,7 +196,7 @@ const TransactionForm: React.FC = () => {
         addToast(`Updated ${transaction.type}`, "success");
       }
     } catch (error) {
-      if (error.status === 401) {
+      if (isAxiosError(error) && error.response?.status === 400) {
         navigateTo("/login");
       }
       console.log(error);
@@ -201,7 +215,7 @@ const TransactionForm: React.FC = () => {
       });
       navigateTo("/");
     } catch (error) {
-      if (error.status === 401) {
+      if (isAxiosError(error) && error.response?.status === 400) {
         navigateTo("/login");
       }
       console.log(error);
@@ -267,16 +281,15 @@ const TransactionForm: React.FC = () => {
                 </label>
                 <DatePicker
                   selected={date}
-                  onChange={(date) => {
+                  onChange={(date: Date | null) => {
                     setDate(date);
-                    setTransaction((prev) => ({
-                      ...prev,
-                      date: convertToISOWithOffset(date),
-                    }));
+                    if (date) {
+                      setTransaction((prev) => ({
+                        ...prev,
+                        date: convertToISOWithOffset(date),
+                      }));
+                    }
                   }}
-                  dateFormat="dd-MM-yyyy"
-                  className="w-full max-w-xs p-2 rounded border bg-gray-900 text-gray-300 focus:ring-blue-500"
-                  required
                 />
               </div>
 

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import TransactionsList from "../components/TransactionsList";
 import { ITransactionItem } from "../types";
@@ -70,7 +70,7 @@ const AllTransactionsPage: React.FC = () => {
       setTransactions(response.data.data.transactions);
       setHasMoreTransactions(response.data.data.hasMoreTransactions);
     } catch (error) {
-      if (error.status === 401) {
+      if ((error as AxiosError).response?.status === 401) {
         navigateTo("/login");
       }
     } finally {

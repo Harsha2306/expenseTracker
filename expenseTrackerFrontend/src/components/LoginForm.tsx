@@ -26,8 +26,7 @@ const LoginForm = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setUserCredentials((prev) => {
         const { errors, ...rest } = prev;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { [e.target.id]: removedError, ...newErrors } = errors;
+        const { [e.target.id as keyof typeof errors]: removedError, ...newErrors } = errors;
         return {
           ...rest,
           [e.target.id]: e.target.value,

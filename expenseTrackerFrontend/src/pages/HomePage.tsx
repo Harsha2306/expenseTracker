@@ -4,7 +4,7 @@ import FilterOptions from "../components/FilterOptions";
 import SummaryCard from "../components/SummaryCard";
 import RecentTransactionsList from "../components/RecentTransactionsList";
 import { ISummary, ITransactionItem } from "../types";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import LoadingSpinner from "../components/LoadingSpinner";
 import useIsAuthorized from "../hooks/useIsAuthorized";
 import { useNavigate } from "react-router";
@@ -45,7 +45,7 @@ const HomePage: React.FC = () => {
       setRecentTransactions(recentTransactions);
       setSummary(incomesExpenses);
     } catch (error) {
-      if (error.status === 401) {
+      if ((error as AxiosError).response?.status === 401) {
         navigateTo("/login");
       }
     } finally {

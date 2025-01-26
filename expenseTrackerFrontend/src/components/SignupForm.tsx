@@ -16,7 +16,6 @@ const initialState: IUserDetails = {
 const API =
   import.meta.env.VITE_AUTH_API_URL || "http://localhost:8080/api/auth";
 
-
 const SignupForm = () => {
   const [userDetails, setUserDetails] = useState<IUserDetails>(initialState);
   const [disabled, setDisabled] = useState(false);
@@ -26,7 +25,7 @@ const SignupForm = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setUserDetails((prev) => {
         const { errors, ...rest } = prev;
-        const { [e.target.id]: removedError, ...newErrors } = errors;
+        const { [e.target.id as keyof typeof errors]: removedError, ...newErrors } = errors;
         return {
           ...rest,
           [e.target.id]: e.target.value,
