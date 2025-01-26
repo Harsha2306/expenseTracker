@@ -13,7 +13,9 @@ const LIMIT = 5;
 const API = import.meta.env.VITE_USER_API_URL || "http://localhost:8080/user";
 
 const AllTransactionsPage: React.FC = () => {
-  const [transactions, setTransactions] = useState<ITransactionItem[]>([]);
+  const [transactions, setTransactions] = useState<ITransactionItem[] | null>(
+    null
+  );
   const [hasMoreTransactions, setHasMoreTransactions] = useState(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigateTo = useNavigate();
@@ -106,10 +108,12 @@ const AllTransactionsPage: React.FC = () => {
           <LoadingSpinner />
         ) : (
           <>
-            <TransactionsList
-              transactions={transactions}
-              className="bg-gray-800 rounded-lg shadow p-4"
-            />
+            {transactions !== null && (
+              <TransactionsList
+                transactions={transactions}
+                className="bg-gray-800 rounded-lg shadow p-4"
+              />
+            )}
             {hasMoreTransactions && (
               <Button
                 type="button"
