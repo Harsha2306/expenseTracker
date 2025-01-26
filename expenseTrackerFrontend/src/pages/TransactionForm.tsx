@@ -102,7 +102,7 @@ const TransactionForm: React.FC = () => {
       const token = localStorage.getItem("token");
       if (!token) return;
       setIsLoading(true);
-      const response = await axios.get(`${API}/${transactionId}`, {
+      const response = await axios.get(`${API}/transaction/${transactionId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
