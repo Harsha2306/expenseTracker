@@ -11,7 +11,7 @@ import { useNavigate } from "react-router";
 import Budget from "../components/Budget";
 import Logout from "../components/Logout";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:8080/user";
+const API = import.meta.env.VITE_USER_API_URL || "http://localhost:8080/user";
 
 const HomePage: React.FC = () => {
   const [filter, setFilter] = useState<keyof ISummary>("thisMonth");
