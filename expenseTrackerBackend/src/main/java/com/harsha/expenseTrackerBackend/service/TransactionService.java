@@ -32,10 +32,11 @@ public class TransactionService {
 	public void deleteTransactionById(String transactionId) {
 		transactionRepository.deleteById(transactionId);
 	}
-	
+
 	public List<Transaction> getTransactions(User user, int limit, String searchText, String sortField,
 			String sortOrder, String expenseType) {
-		Sort.Direction direction = !sortOrder.equalsIgnoreCase(Constants.ASC) ? Sort.Direction.DESC : Sort.Direction.ASC;
+		Sort.Direction direction = !sortOrder.equalsIgnoreCase(Constants.ASC) ? Sort.Direction.DESC
+				: Sort.Direction.ASC;
 
 		Sort sort = Sort.by(direction, sortField != null && !sortField.isEmpty() ? sortField : Constants.DATE);
 
@@ -50,7 +51,7 @@ public class TransactionService {
 							searchText, pageable)
 					: transactionRepository.findByCreatedUserAndTypeAndNoteContainingIgnoreCase(user, expenseType,
 							searchText);
-		} else if (expenseType != null && !expenseType.isEmpty()) {
+		}  else if (expenseType != null && !expenseType.isEmpty()) {
 			return pageable != null ? transactionRepository.findByCreatedUserAndType(user, expenseType, pageable)
 					: transactionRepository.findByCreatedUserAndType(user, expenseType);
 		} else if (searchText != null && !searchText.isEmpty()) {
@@ -85,7 +86,7 @@ public class TransactionService {
 		totals.add(getTransactionByTypeAndDateRange(user, Constants.EXPENSE, startDate, endDate));
 		return totals;
 	}
-	
+
 	public Optional<Transaction> getTransactionById(String id) {
 		return transactionRepository.findById(id);
 	}

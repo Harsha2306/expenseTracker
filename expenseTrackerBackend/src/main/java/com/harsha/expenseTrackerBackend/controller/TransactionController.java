@@ -51,8 +51,8 @@ public class TransactionController extends BaseController {
 			HttpServletRequest httpServletRequest) {
 		try {
 			if (!isAuthorized(httpServletRequest))
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-						.body(new ErrorResponse(false, HttpStatus.UNAUTHORIZED.value(), Constants.NOT_AUTHORIZED, null));
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+						new ErrorResponse(false, HttpStatus.UNAUTHORIZED.value(), Constants.NOT_AUTHORIZED, null));
 
 			Optional<Category> optionalCategory = categoryService.getCategoryById(transaction.getCategory().getId());
 			Category category = optionalCategory.get();
@@ -74,8 +74,8 @@ public class TransactionController extends BaseController {
 			@PathVariable String transactionId, HttpServletRequest httpServletRequest) {
 		try {
 			if (!isAuthorized(httpServletRequest))
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-						.body(new ErrorResponse(false, HttpStatus.UNAUTHORIZED.value(), Constants.NOT_AUTHORIZED, null));
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+						new ErrorResponse(false, HttpStatus.UNAUTHORIZED.value(), Constants.NOT_AUTHORIZED, null));
 
 			User user = userService.findByEmail(getEmail(httpServletRequest));
 			Map<String, String> validationErrors = transactionValidator.validateGetTransaction(transactionId, user);
@@ -106,8 +106,8 @@ public class TransactionController extends BaseController {
 			@RequestParam int limit) {
 		try {
 			if (!isAuthorized(httpServletRequest))
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-						.body(new ErrorResponse(false, HttpStatus.UNAUTHORIZED.value(), Constants.NOT_AUTHORIZED, null));
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+						new ErrorResponse(false, HttpStatus.UNAUTHORIZED.value(), Constants.NOT_AUTHORIZED, null));
 
 			User user = userService.findByEmail(getEmail(httpServletRequest));
 
@@ -115,6 +115,13 @@ public class TransactionController extends BaseController {
 					sortField, sortOrder, type);
 			List<Transaction> transactions = transactionService.getTransactions(user, 0, search, sortField, sortOrder,
 					type);
+			
+			if (sortField.equals("amount"))
+				if (sortOrder.equals("asc"))
+					transactionsByCriteria.sort((t1, t2) -> t1.getAmount().compareTo(t2.getAmount()));
+				else
+					transactionsByCriteria.sort((t1, t2) -> t2.getAmount().compareTo(t1.getAmount()));
+			
 			boolean hasMoreTransactions = transactions.size() > transactionsByCriteria.size();
 			return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<TransactionInfo>(true, Constants.OK,
 					new TransactionInfo(transactionsByCriteria, hasMoreTransactions), HttpStatus.OK.value()));
@@ -129,8 +136,8 @@ public class TransactionController extends BaseController {
 			@PathVariable String transactionId) {
 		try {
 			if (!isAuthorized(httpServletRequest))
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-						.body(new ErrorResponse(false, HttpStatus.UNAUTHORIZED.value(), Constants.NOT_AUTHORIZED, null));
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+						new ErrorResponse(false, HttpStatus.UNAUTHORIZED.value(), Constants.NOT_AUTHORIZED, null));
 
 			User user = userService.findByEmail(getEmail(httpServletRequest));
 			Map<String, String> validationErrors = transactionValidator.validateGetTransaction(transactionId, user);
@@ -152,8 +159,8 @@ public class TransactionController extends BaseController {
 			@PathVariable String transactionId) {
 		try {
 			if (!isAuthorized(httpServletRequest))
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-						.body(new ErrorResponse(false, HttpStatus.UNAUTHORIZED.value(), Constants.NOT_AUTHORIZED, null));
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+						new ErrorResponse(false, HttpStatus.UNAUTHORIZED.value(), Constants.NOT_AUTHORIZED, null));
 
 			User user = userService.findByEmail(getEmail(httpServletRequest));
 			Map<String, String> validationErrors = transactionValidator.validateGetTransaction(transactionId, user);

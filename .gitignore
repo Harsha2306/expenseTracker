@@ -56,8 +56,6 @@ build/
 !**/src/test/**/build/
 
 # Sensitive configuration
-application.yml
-application.properties
 .env
 
 ### React ###

@@ -57,7 +57,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         </select>
         <img
           onClick={handleSortTypeChange}
-          src={`public/icons/${
+          src={`public/${
             sortOrder === "asc" ? "ascending" : "descending"
           }.svg`}
           alt={sortOrder === "asc" ? "Ascending" : "Descending"}

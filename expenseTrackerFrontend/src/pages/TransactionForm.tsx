@@ -89,9 +89,9 @@ const TransactionForm: React.FC = () => {
     income: ICategory[];
     expense: ICategory[];
   }>({ income: [], expense: [] });
-  const [isLoading, setIsLoading] = useState(false);
+    const { transactionId } = useParams();
+  const [isLoading, setIsLoading] = useState(transactionId ? true : false);
   const navigateTo = useNavigate();
-  const { transactionId } = useParams();
   const { addToast } = useToastContext();
 
   useIsAuthorized();
@@ -280,6 +280,7 @@ const TransactionForm: React.FC = () => {
                   Date
                 </label>
                 <DatePicker
+                className="w-full px-4 py-2 text-sm border border-gray-300 bg-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   selected={date}
                   onChange={(date: Date | null) => {
                     setDate(date);
