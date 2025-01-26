@@ -28,15 +28,6 @@ const AllTransactionsPage: React.FC = () => {
 
   useIsAuthorized();
 
-  useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      setDebouncedValue(searchValue);
-      setIsLoading(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [searchValue]);
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
     setLimit(LIMIT);
@@ -78,8 +69,14 @@ const AllTransactionsPage: React.FC = () => {
   }, [debouncedValue, filterValue, limit, navigateTo, sortBy, sortOrder]);
 
   useEffect(() => {
-    fetchTransactions();
-  }, [fetchTransactions]);
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setDebouncedValue(searchValue);
+      fetchTransactions();
+      setIsLoading(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [fetchTransactions, searchValue]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-200 p-8 flex justify-center">
