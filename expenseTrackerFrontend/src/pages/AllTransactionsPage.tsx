@@ -72,9 +72,9 @@ const AllTransactionsPage: React.FC = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
       setDebouncedValue(searchValue);
-      fetchTransactions();
+      await fetchTransactions();
       setIsLoading(false);
     }, 3000);
     return () => clearTimeout(timer);
@@ -109,19 +109,21 @@ const AllTransactionsPage: React.FC = () => {
         ) : (
           <>
             {transactions !== null && (
-              <TransactionsList
-                transactions={transactions}
-                className="bg-gray-800 rounded-lg shadow p-4"
-              />
-            )}
-            {hasMoreTransactions && (
-              <Button
-                type="button"
-                className="w-full mt-2 text-gray-400 hover:text-gray-300 px-6 py-2 rounded-lg bg-gray-700 transition-all cursor-pointer"
-                onClick={() => setLimit((prev) => prev + LIMIT)}
-              >
-                Load more
-              </Button>
+              <>
+                <TransactionsList
+                  transactions={transactions}
+                  className="bg-gray-800 rounded-lg shadow p-4"
+                />
+                {hasMoreTransactions && (
+                  <Button
+                    type="button"
+                    className="w-full mt-2 text-gray-400 hover:text-gray-300 px-6 py-2 rounded-lg bg-gray-700 transition-all cursor-pointer"
+                    onClick={() => setLimit((prev) => prev + LIMIT)}
+                  >
+                    Load more
+                  </Button>
+                )}
+              </>
             )}
           </>
         )}
