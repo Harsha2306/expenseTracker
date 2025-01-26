@@ -15,7 +15,7 @@ const API = import.meta.env.VITE_USER_API_URL || "http://localhost:8080/user";
 const AllTransactionsPage: React.FC = () => {
   const [transactions, setTransactions] = useState<ITransactionItem[]>([]);
   const [hasMoreTransactions, setHasMoreTransactions] = useState(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigateTo = useNavigate();
 
   const [searchValue, setSearchValue] = useState("");
@@ -58,7 +58,6 @@ const AllTransactionsPage: React.FC = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
-      setIsLoading(true);
       const response = await axios.get(
         `${API}/allTransactions?search=${debouncedValue}&sortField=${sortBy}&sortOrder=${sortOrder}&limit=${limit}&type=${filterValue}`,
         {
