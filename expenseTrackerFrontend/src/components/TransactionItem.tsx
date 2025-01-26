@@ -25,7 +25,7 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction }) => {
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-gray-500 text-white rounded-full flex justify-center items-center hover:bg-gray-400 transition-all">
             <img
-              src={`public/icons/${iconPath}.svg`}
+              src={`public/${iconPath}.svg`}
               alt="icon"
               className="w-5 h-5"
             />
