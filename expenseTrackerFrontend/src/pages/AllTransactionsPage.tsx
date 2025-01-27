@@ -51,6 +51,7 @@ const AllTransactionsPage: React.FC = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
+      setIsLoading(true);
       const response = await axios.get(
         `${API}/allTransactions?search=${debouncedValue}&sortField=${sortBy}&sortOrder=${sortOrder}&limit=${limit}&type=${filterValue}`,
         {
@@ -72,13 +73,15 @@ const AllTransactionsPage: React.FC = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    const timer = setTimeout(async () => {
+    const timer = setTimeout(() => {
       setDebouncedValue(searchValue);
-      await fetchTransactions();
-      setIsLoading(false);
     }, 3000);
     return () => clearTimeout(timer);
-  }, [fetchTransactions, searchValue]);
+  }, [searchValue]);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-200 p-8 flex justify-center">
