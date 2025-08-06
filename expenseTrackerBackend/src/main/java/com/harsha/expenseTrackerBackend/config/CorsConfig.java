@@ -13,8 +13,8 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:5173"); 
-        config.addAllowedOrigin("https://expense-tracker-orpin-theta.vercel.app");
+        config.addAllowedOrigin("http://localhost:5173");
+        config.addAllowedOrigin("https://expense-tracker-pt2l3vm4z-harshas-projects-8bf50264.vercel.app");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
